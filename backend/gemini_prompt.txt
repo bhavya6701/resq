@@ -1,0 +1,35 @@
+Extract the following structured data from the transcription of the given user. For any missing information, use "not given".
+
+---
+- **original_transcription**: [The original transcription of the user's call] 
+- **incident_type**: [Medical / Fire / Crime / Natural Disaster / Accident / Domestic Violence / Danger / Other]
+- **incident_priority**: [Critical / High / Medium / Low]
+- **incident_timestamp**: [ISO 8601 format (YYYY-MM-DD HH:MM:SSZ) or "not given"]
+- **incident_title**: [6-10 word summary, e.g., "Apartment fire with trapped elderly resident"]
+- **incident_description**: [2-3 sentence factual summary]
+
+- **location_street1**: [Primary address or landmark]
+- **location_street2**: [Apartment/Floor/Room or "not given"]
+- **location_city**: [City name]
+- **location_state_province**: [State/Province abbreviation]
+- **location_country**: [Country name]
+- **location_postal_code**: [Postal Code or "not given"]
+- **location_coordinates**: [Latitude, Longitude (only if explicitly mentioned)]
+
+- **user_name**: [User's name or "not given"]
+- **user_role**: [Victim / Bystander / First Responder / Other]
+- **user_safety_status**: [Safe / Trapped / Injured / Danger / Unknown]
+- **user_medical_conditions**: [An array of medical conditions or "not given"]
+- **user_additional_info**: [Any other relevant information related to the user or "not given"]
+
+- **additional_keywords**: [An array of keywords capturing hazards, medical conditions, injured count, fire status, communal tension, family dispute, weapons information or any other relevant information or "not given"]
+
+---
+**Rules**:
+1. If only a partial address is provided (e.g., "Paris"), infer the country if obvious.
+2. Include coordinates only if they are explicitly mentioned.
+3. Assume "No" for fire and weapons unless directly stated.
+4. Use the provided terms to determine the appropriate priority.
+5. Provide the data in json format.
+
+**Transcription**:

@@ -11,6 +11,21 @@ if not firebase_admin._apps:
 
 def get_db():
     """
-    Returns a reference to the 'emergency_responses' node in the Firebase Realtime Database.
+    Returns a reference to the 'resq-database' node in the Firebase Realtime Database.
     """
-    return db.reference('emergency_responses')
+    return db.reference('resq-database')
+
+
+def insert_processed_json(processed_json):
+    """
+    Inserts the processed JSON into the 'resq-database' node
+    in your Firebase Realtime Database and returns the generated key.
+    """
+    # Get a reference to the resq-database node
+    ref = db.reference('resq-database')
+    
+    # Push the processed JSON into the database
+    new_response_ref = ref.push(processed_json)
+    
+    # Return the unique key generated for this new record
+    return new_response_ref.key
