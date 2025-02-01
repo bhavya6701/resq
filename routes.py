@@ -1,9 +1,5 @@
 from flask import Blueprint, request, jsonify
 from firebase_helper import get_db
-import base64
-import tempfile
-import os
-import json
 
 from helper_functions import transcribe_audio, process_transcription
 from firebase_helper import insert_processed_json
@@ -17,6 +13,15 @@ def test():
     return jsonify({'message': 'Hello, World!'}), 200
 
 
+@bp.route('/responses', methods=['GET'])
+def get_responses():
+    """
+    Retrieves all emergency responses.
+    """
+    responses = get_db().get()
+    return jsonify(responses if responses else {}), 200
+
+
 @bp.route('/responses', methods=['POST'])
 def add_response():
     """
@@ -26,8 +31,6 @@ def add_response():
     if 'audio' in request.files:
         # Get the audio file from the request
         audio_file = request.files['audio']
-        
-        # Read the audio file and create a tuple with the filename, stream, and content type
         audio_tuple = (audio_file.filename, audio_file.stream, audio_file.content_type)
         
         # Transcribe the audio file
@@ -54,6 +57,7 @@ def add_response():
     # Return the response key and a success message
     return new_response_key, 200
 
+
 @bp.route('/responses/<response_id>', methods=['PUT'])
 def update_response(response_id):
     """
@@ -70,6 +74,7 @@ def update_response(response_id):
     response_ref.update(data)
     return jsonify({'message': 'Response updated'}), 200
 
+
 @bp.route('/responses/<response_id>', methods=['DELETE'])
 def delete_response(response_id):
     """
@@ -81,11 +86,3 @@ def delete_response(response_id):
 
     response_ref.delete()
     return jsonify({'message': 'Response deleted'}), 200
-
-@bp.route('/responses', methods=['GET'])
-def get_responses():
-    """
-    Retrieves all emergency responses.
-    """
-    responses = get_db().get()
-    return jsonify(responses if responses else {}), 200
