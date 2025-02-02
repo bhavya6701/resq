@@ -2,15 +2,20 @@ import openai
 import google.generativeai as genai
 import json
 from datetime import datetime
+import os
+from dotenv import load_dotenv  # <-- Add this
 
-gemin_prompt_file = open("gemini_prompt.txt", "r")
-json_key_file = open("genai_keys.json", "r")
+# Load environment variables from .env file (local only)
+load_dotenv()
 
-gemini_prompt = gemin_prompt_file.read()
-json_keys = json.load(json_key_file)
+gemini_prompt_file = open("gemini_prompt.txt", "r")
 
-openai_client = openai.Client(api_key=json_keys["openai_api_key"])
-genai.configure(api_key=json_keys["gemini_api_key"])
+gemini_prompt = gemini_prompt_file.read()
+openai_api_key = os.environ.get('openai_api_key')
+gemini_api_key = os.environ.get('gemini_api_key')
+
+openai_client = openai.Client(api_key=openai_api_key)
+genai.configure(api_key=gemini_api_key)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 
