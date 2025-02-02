@@ -29,3 +29,16 @@ def insert_processed_json(processed_json):
     
     # Return the unique key generated for this new record
     return new_response_ref.key
+
+
+def update_processed_json(response_id, processed_json):
+    """
+    Updates the existing emergency response with the provided data.
+    """
+    # Get a reference to the resq-database node
+    ref = db.reference('resq-database')
+    
+    # Update the existing emergency response with the provided data
+    ref.child(response_id).update(processed_json)
+    
+    return response_id

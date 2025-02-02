@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from firebase_helper import get_db
 
 from helper_functions import transcribe_audio, process_transcription
-from firebase_helper import insert_processed_json
+from firebase_helper import insert_processed_json, update_processed_json
 
 bp = Blueprint('responses', __name__)
 
@@ -42,6 +42,8 @@ def add_response():
         # Get the text data from the request
         process_input_text = request.json["text"]
     
+    process_input_text = "**Transcription**:\n" + process_input_text
+    
     # Process the transcription to generate structured content
     try:
         response_json = process_transcription(process_input_text)
@@ -63,16 +65,43 @@ def update_response(response_id):
     """
     Updates an existing emergency response with the provided data.
     """
-    data = request.json
-    if not data:
+    # Check if the request contains audio data
+    if 'audio' in request.files:
+        # Get the audio file from the request
+        audio_file = request.files['audio']
+        audio_tuple = (audio_file.filename, audio_file.stream, audio_file.content_type)
+        
+        # Transcribe the audio file
+        try:
+            process_input_text = transcribe_audio(audio_tuple)
+        except Exception as e:
+            return jsonify({'error': 'Transcription failed', 'details': str(e)}), 500
+    elif "text" in request.json:
+        # Get the text data from the request
+        process_input_text = request.json["text"]
+    elif not request.json:
         return jsonify({'error': 'No data provided'}), 400
 
+    # Get the existing emergency response from the database
     response_ref = get_db().child(response_id)
     if not response_ref.get():
         return jsonify({'error': 'Response not found'}), 404
-
-    response_ref.update(data)
-    return jsonify({'message': 'Response updated'}), 200
+    
+    process_input_text = "**Original Data**:\n" + str(response_ref.get()) + "\nUpdate Data using the following transcription:\n" + process_input_text
+    
+    # Process the transcription to generate structured content
+    try:
+        response_json = process_transcription(process_input_text)
+    except Exception as e:
+        return jsonify({'error': 'Content generation failed', 'details': str(e)}), 500
+    
+    # Insert the processed JSON into the Firebase Realtime Database
+    try:
+        response_id = update_processed_json(response_id, response_json)
+    except Exception as e:
+        return jsonify({'error': 'Database insertion failed', 'details': str(e)}), 500
+    
+    return response_id, 200
 
 
 @bp.route('/responses/<response_id>', methods=['DELETE'])

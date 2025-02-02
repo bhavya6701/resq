@@ -32,4 +32,3 @@ Extract the following structured data from the transcription of the given user. 
 4. Use the provided terms to determine the appropriate priority.
 5. Provide the data in json format.
 
-**Transcription**:
