@@ -18,4 +18,4 @@ def create_app():
 if __name__ == '__main__':
     # Bind to port 0.0.0.0 to allow external access
     app = create_app()
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True, port=5000)
