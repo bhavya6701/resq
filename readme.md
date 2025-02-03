@@ -19,41 +19,6 @@ The ResQ backend is built with Flask and provides a set of RESTful API endpoints
 - **RESTful API Endpoints:** Provides endpoints for creating, reading, updating, and deleting responses.
 - **CORS Enabled:** Configured to support cross-origin requests, facilitating integration with front-end applications.
 
-## Architecture
-
-The project is organized into several key modules:
-
-- **`main.py`:**  
-  Initializes the Flask app, loads configuration, enables CORS, and registers API routes.
-
-- **`routes.py`:**  
-  Contains API endpoints for:
-  - Testing the API.
-  - Fetching all responses.
-  - Adding a new response.
-  - Updating an existing response.
-  - Deleting a response.
-
-- **`helper_functions.py`:**  
-  Provides functions to:
-  - Transcribe audio files using OpenAI's Whisper.
-  - Process transcriptions with a Gemini prompt to generate structured JSON data.
-
-- **`firebase_helper.py`:**  
-  Handles all interactions with the Firebase Realtime Database, including:
-  - Retrieving the database reference.
-  - Inserting new records.
-  - Updating existing records.
-
-- **`Config.py`:**  
-  Manages application configuration, including:
-  - Secret keys.
-  - Firebase credentials and database URL.
-  - Other environment-specific settings.
-
-- **`requirements.txt`:**  
-  Lists all Python dependencies for the project.
-
 ## Installation
 
 1. **Clone the repository:**
@@ -106,3 +71,9 @@ Ensure you have a gemini_prompt.txt file in the project root. This file contains
 - The application will run in debug mode on the default port (5000). For production deployments, consider using a WSGI server like Gunicorn: `gunicorn main:app`
 
 - Test the API by sending requests to the available endpoints. You can use tools like Postman or cURL to interact with the API.
+
+## Frontend - Mobile Application
+
+The frontend for the ResQ application is built with Flutter (dart) and provides a mobile interface for users to record emergency responses, view response details, and access location information. The frontend interacts with the backend API to send and receive data.
+
+More details regarding the user interface and functionality can be found on the devpost submission page with demo videos and screenshots: [ResQ Devpost Submission](https://devpost.com/software/resq-aw81no)
